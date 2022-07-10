@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using API.Extensions;
 using Application.Activities;
+using Application.Core;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -33,29 +35,7 @@ namespace API
         {
 
             services.AddControllers();
-            services.AddSwaggerGen(c => {
-                c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
-                c.IgnoreObsoleteActions();
-                c.IgnoreObsoleteProperties();
-                c.CustomSchemaIds(type => type.FullName);
-            });
-
-            services.AddDbContext<DataContext>(async opt =>
-            {
-                opt.UseSqlite(_config.GetConnectionString("DefaultConnection"));
-            });
-
-            services.AddCors(opt =>
-            {
-                opt.AddPolicy("CorsPolicy", policy =>
-                {
-                    policy.AllowAnyMethod().AllowAnyHeader().WithOrigins("https://localhost:7180");
-                });
-            });
-            services.AddMediatR(typeof(List.Handler).Assembly);
-            services.AddMediatR(typeof(Detail.Handler).Assembly);
-            services.AddMediatR(typeof(Create.Command).Assembly);
-            services.AddMediatR(typeof(Edit.Command).Assembly);
+            services.AddServices(_config);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
