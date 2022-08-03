@@ -7,6 +7,7 @@ namespace Demo.Controllers
 {
     public class ActivityController : BaseAPIController
     {
+        [AllowAnonymous]
 
         [HttpGet]
         public async Task<ActionResult<List<Activity>>> GetActivities()
