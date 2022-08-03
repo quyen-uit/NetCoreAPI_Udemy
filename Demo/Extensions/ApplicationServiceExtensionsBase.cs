@@ -18,16 +18,16 @@ namespace API.Extensions
                 c.CustomSchemaIds(type => type.FullName);
             });
 
-            services.AddDbContext<DataContext>(async opt =>
+            services.AddDbContext<DataContext>( opt =>
             {
-                opt.UseSqlite(config.GetConnectionString("DefaultConnection"));
+                 opt.UseSqlite(config.GetConnectionString("DefaultConnection"));
             });
 
             services.AddCors(opt =>
             {
                 opt.AddPolicy("CorsPolicy", policy =>
                 {
-                    policy.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:3000");
+                    policy.AllowAnyMethod().AllowAnyHeader().WithOrigins("https://localhost:7180");
                 });
             });
             services.AddMediatR(typeof(List.Handler).Assembly);
