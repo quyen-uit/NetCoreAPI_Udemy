@@ -2,7 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
-namespace Demo.Controllers
+namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -19,9 +19,9 @@ namespace Demo.Controllers
                 return Ok(result.Value);
 
             if (result.IsSuccess && result.Value == null)
-                return NotFound();
+                return NotFound(result.Value);
 
-            return BadRequest();
+            return BadRequest(result.Error);
         }
     }
 }

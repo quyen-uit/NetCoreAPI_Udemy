@@ -1,5 +1,8 @@
 ﻿using Application.Activities;
 using Application.Core;
+using Application.Interfaces;
+using Infrastructure.Photos;
+using Infrastructure.Security;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -18,9 +21,9 @@ namespace API.Extensions
                 c.CustomSchemaIds(type => type.FullName);
             });
 
-            services.AddDbContext<DataContext>( opt =>
+            services.AddDbContext<DataContext>(opt =>
             {
-                 opt.UseSqlite(config.GetConnectionString("DefaultConnection"));
+                opt.UseSqlite(config.GetConnectionString("DefaultConnection"));
             });
 
             services.AddCors(opt =>
@@ -36,6 +39,11 @@ namespace API.Extensions
             services.AddMediatR(typeof(Edit.Command).Assembly);
 
             services.AddAutoMapper(typeof(MappingProfiles).Assembly);
+
+            services.Configure<CloudinarySettings>(config.GetSection("CloudinaryKey"));
+
+            services.AddScoped<IPhotoAccessor, PhotoAccessor>();
+            services.AddScoped<IUserAccessor, UserAccessor>();
 
             return services;
         }

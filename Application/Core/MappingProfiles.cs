@@ -15,13 +15,17 @@ namespace Application.Core
         {
             CreateMap<Activity, Activity>();
             CreateMap<Activity, ActivityDto>()
-                .ForMember(des => des.HostUserName, act => act.MapFrom(src => src.ActivityAttendees.FirstOrDefault(x=> x.IsHost).AppUser.UserName))
-                .ForMember(des => des.Profiles, act => act.MapFrom(src=>src.ActivityAttendees));
+                .ForMember(des => des.HostUserName, act => act.MapFrom(src => src.ActivityAttendees.FirstOrDefault(x => x.IsHost).AppUser.UserName))
+                .ForMember(des => des.Attendees, act => act.MapFrom(src => src.ActivityAttendees));
 
-            CreateMap<ActivityAttendee, Profiles.Profile>().ForMember(des => des.Displayname, act => act.MapFrom(src=>src.AppUser.DisplayName));
-            CreateMap<ActivityAttendee, Profiles.Profile>().ForMember(des => des.Bio, act => act.MapFrom(src => src.AppUser.Bio));
-            CreateMap<ActivityAttendee, Profiles.Profile>().ForMember(des => des.UserName, act => act.MapFrom(src => src.AppUser.UserName));
+            CreateMap<ActivityAttendee, AttendeeDto>()
+                    .ForMember(des => des.Displayname, act => act.MapFrom(src => src.AppUser.DisplayName))
+                    .ForMember(des => des.Bio, act => act.MapFrom(src => src.AppUser.Bio))
+                    .ForMember(des => des.UserName, act => act.MapFrom(src => src.AppUser.UserName))
+                    .ForMember(des => des.Image, act => act.MapFrom(src => src.AppUser.Photos.FirstOrDefault(x => x.IsMain).Url));
 
+            CreateMap<AppUser, Profiles.Profile>()
+                .ForMember(des => des.Image, act => act.MapFrom(src => src.Photos.FirstOrDefault(x => x.IsMain).Url));
         }
 
     }

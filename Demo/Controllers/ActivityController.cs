@@ -3,11 +3,11 @@ using Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Demo.Controllers
+namespace API.Controllers
 {
+    [AllowAnonymous]
     public class ActivityController : BaseAPIController
     {
-        [AllowAnonymous]
 
         [HttpGet]
         public async Task<ActionResult<List<Activity>>> GetActivities()
@@ -15,7 +15,7 @@ namespace Demo.Controllers
             var result = await Mediator.Send(new List.Query());
             return HandleResult(result);
         }
-        [Authorize(Policy = "IsActivityHost")]
+ 
         [HttpGet("{id}")]
         public async Task<ActionResult<Activity>> GetActivity(Guid id)
         {
@@ -28,6 +28,8 @@ namespace Demo.Controllers
         {
             return HandleResult(await Mediator.Send(new Create.Command() { Activity = activity }));
         }
+
+        [Authorize(Policy = "IsActivityHost")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateActivity(Guid id, Activity activity)
         {
