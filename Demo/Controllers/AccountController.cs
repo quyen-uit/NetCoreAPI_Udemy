@@ -45,7 +45,8 @@ namespace API.Controllers
         {
             if (await _userManager.Users.AnyAsync(x => x.Email == registerDto.Email))
             {
-                return BadRequest("Email existed.");
+                ModelState.AddModelError("email", "Email existed");
+                return ValidationProblem();
             }
 
             if (await _userManager.Users.AnyAsync(x => x.UserName == registerDto.UserName))
