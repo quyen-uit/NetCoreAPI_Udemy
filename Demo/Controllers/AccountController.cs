@@ -44,12 +44,14 @@ namespace API.Controllers
         {
             if (await _userManager.Users.AnyAsync(x => x.Email == registerDto.Email))
             {
-                return BadRequest("Email existed.");
+                ModelState.AddModelError("email", "Email existed.");
+                return ValidationProblem(ModelState);
             }
 
             if (await _userManager.Users.AnyAsync(x => x.UserName == registerDto.UserName))
             {
-                return BadRequest("User Name existed.");
+                ModelState.AddModelError("email", "User Name existed.");
+                return ValidationProblem(ModelState);
             }
 
             AppUser user = new AppUser
@@ -67,7 +69,8 @@ namespace API.Controllers
             }
             else
             {
-                return BadRequest("Register error:" + result.Errors.ToList()[0].Description);
+                ModelState.AddModelError("email", "Register error:" + result.Errors.ToList()[0].Description);
+                return ValidationProblem(ModelState);
             }
         }
 
