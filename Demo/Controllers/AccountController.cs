@@ -9,7 +9,6 @@ using System.Security.Claims;
 
 namespace API.Controllers
 {
-    [AllowAnonymous]
     [ApiController]
     [Route("api/[controller]")]
     public class AccountController : ControllerBase
@@ -23,7 +22,7 @@ namespace API.Controllers
             _signInManager = signInManager;
             _tokenService = tokenService;
         }
-
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {
@@ -40,6 +39,7 @@ namespace API.Controllers
             return Unauthorized();
         }
 
+        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
         {
@@ -51,7 +51,8 @@ namespace API.Controllers
 
             if (await _userManager.Users.AnyAsync(x => x.UserName == registerDto.UserName))
             {
-                return BadRequest("User Name existed.");
+                ModelState.AddModelError("username", "User Name existed.");
+                return ValidationProblem();
             }
 
             AppUser user = new AppUser
@@ -69,7 +70,8 @@ namespace API.Controllers
             }
             else
             {
-                return BadRequest("Register error:" + result.Errors.ToList()[0].Description);
+                ModelState.AddModelError("registererror", "Register error:" + result.Errors.ToList()[0].Description);
+                return ValidationProblem();
             }
         }
 
