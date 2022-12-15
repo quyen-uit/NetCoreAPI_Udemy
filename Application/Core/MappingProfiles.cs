@@ -2,6 +2,7 @@
 using Application.Comments;
 using AutoMapper;
 using Domain;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,7 @@ namespace Application.Core
     {
         public MappingProfiles()
         {
+            string currentUserName = null;
             CreateMap<Activity, Activity>();
             CreateMap<Activity, ActivityDto>()
                 .ForMember(des => des.HostUserName, act => act.MapFrom(src => src.ActivityAttendees.FirstOrDefault(x => x.IsHost).AppUser.UserName))
@@ -23,10 +25,16 @@ namespace Application.Core
                     .ForMember(des => des.DisplayName, act => act.MapFrom(src => src.AppUser.DisplayName))
                     .ForMember(des => des.Bio, act => act.MapFrom(src => src.AppUser.Bio))
                     .ForMember(des => des.UserName, act => act.MapFrom(src => src.AppUser.UserName))
-                    .ForMember(des => des.Image, act => act.MapFrom(src => src.AppUser.Photos.FirstOrDefault(x => x.IsMain).Url));
+                    .ForMember(des => des.Image, act => act.MapFrom(src => src.AppUser.Photos.FirstOrDefault(x => x.IsMain).Url))
+                    .ForMember(des => des.FollowersCount, act => act.MapFrom(src => src.AppUser.Followers.Count))
+                    .ForMember(des => des.FollowingsCount, act => act.MapFrom(src => src.AppUser.Followings.Count))
+                    .ForMember(des => des.Following, act => act.MapFrom(src => src.AppUser.Followers.Any(x => x.Observer.UserName == currentUserName)));
 
             CreateMap<AppUser, Profiles.Profile>()
-                .ForMember(des => des.Image, act => act.MapFrom(src => src.Photos.FirstOrDefault(x => x.IsMain).Url));
+                .ForMember(des => des.Image, act => act.MapFrom(src => src.Photos.FirstOrDefault(x => x.IsMain).Url))
+                .ForMember(des => des.FollowersCount, act => act.MapFrom(src => src.Followers.Count))
+                .ForMember(des => des.FollowingsCount, act => act.MapFrom(src => src.Followings.Count))
+                .ForMember(des => des.Following, act => act.MapFrom(src => src.Followers.Any(x => x.Observer.UserName == currentUserName)));
 
             CreateMap<Comment,CommentDto>()
                 .ForMember(des => des.DisplayName, act => act.MapFrom(src => src.Author.DisplayName))

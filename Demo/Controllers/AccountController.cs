@@ -74,7 +74,6 @@ namespace API.Controllers
                 return ValidationProblem();
             }
         }
-
         [Authorize]
         [HttpGet]
         public async Task<ActionResult<UserDto>> GetCurrentUser()

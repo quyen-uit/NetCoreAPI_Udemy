@@ -1,8 +1,10 @@
 ﻿using Application.Profiles;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
+using API.DTOs;
 namespace API.Controllers
 {
+    [Authorize]
     public class ProfileController : BaseAPIController
     {
         [HttpGet("{username}")]
@@ -10,6 +12,10 @@ namespace API.Controllers
         {
             return HandleResult(await Mediator.Send(new Detail.Query { UserName = username }));
         }
-
+        [HttpPut]
+        public async Task<IActionResult> UpdateProfile(ProfileDto profile)
+        {
+            return HandleResult(await Mediator.Send(new Update.Command {Profile = profile }));
+        }
     }
 }

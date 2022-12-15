@@ -57,7 +57,7 @@ namespace API.Extensions
             });
 
             services.AddTransient<IAuthorizationHandler, IsHostRequirementHandler>();
-
+            services.AddScoped<TokenService>();
             return services;
         }
     }
