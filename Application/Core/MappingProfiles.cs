@@ -16,7 +16,8 @@ namespace Application.Core
         public MappingProfiles()
         {
             string currentUserName = null;
-            CreateMap<Activity, Activity>();
+            CreateMap<Activity, Activity>()
+               .ForMember(des => des.IsCancelled, act => act.Ignore());
             CreateMap<Activity, ActivityDto>()
                 .ForMember(des => des.HostUserName, act => act.MapFrom(src => src.ActivityAttendees.FirstOrDefault(x => x.IsHost).AppUser.UserName))
                 .ForMember(des => des.Attendees, act => act.MapFrom(src => src.ActivityAttendees));

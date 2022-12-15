@@ -42,7 +42,7 @@ namespace API.Controllers
         {
             return HandleResult(await Mediator.Send(new Delete.Command() { Id = id }));
         }
-        [Authorize(Policy = "IsActivityHost")]
+
         [HttpPost("{id}/attend")]
         public async Task<IActionResult> AttendActivity(Guid id)
         {
