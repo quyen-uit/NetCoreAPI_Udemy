@@ -45,7 +45,7 @@ namespace Application.Photos
 
                 var result = await _photoAccessor.DeletePhoto(photo.Id);
 
-                if (result != null)
+                if (result == null)
                     return Result<Unit>.Failure("Problem delete photo from cloudinary");
 
                 user.Photos.Remove(photo);
