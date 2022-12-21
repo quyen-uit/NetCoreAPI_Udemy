@@ -2,7 +2,7 @@
 {
     public class ProfileDto
     {
-        public string Displayname { get; set; }
+        public string DisplayName { get; set; }
         public string? Bio { get; set; }
     }
 }

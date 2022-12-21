@@ -40,7 +40,7 @@ namespace Application.Profiles
                     return Result<Unit>.Failure("user do not exist");
 
                 user.Bio = request.Profile.Bio;
-                user.DisplayName = request.Profile.Displayname;
+                user.DisplayName = request.Profile.DisplayName;
 
                 _context.Attach<AppUser>(user).State = EntityState.Modified; 
                 var result = await _context.SaveChangesAsync() > 0;

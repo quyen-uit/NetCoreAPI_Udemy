@@ -11,7 +11,7 @@ namespace Application.Profiles
     {
         public ProfileDtoValidator()
         {
-            RuleFor(x=> x.Bio).NotEmpty();
+            RuleFor(x=> x.DisplayName).NotEmpty();
         }
     }
 }
