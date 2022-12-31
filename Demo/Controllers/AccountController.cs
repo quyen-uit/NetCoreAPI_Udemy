@@ -43,7 +43,8 @@ namespace API.Controllers
 
             if (result.Succeeded)
             {
-                return CreateUser(user);
+                await SetRefreshToken(user);
+                return CreateAppUser(user);
             }
             return Unauthorized();
         }
@@ -75,7 +76,7 @@ namespace API.Controllers
 
             if (result.Succeeded)
             {
-                return CreateUser(user);
+                return CreateAppUser(user);
             }
             else
             {
@@ -88,8 +89,10 @@ namespace API.Controllers
         public async Task<ActionResult<UserDto>> GetCurrentUser()
         {
             var user = await _userManager.Users.Include(x => x.Photos)
-                .FirstOrDefaultAsync(x => x.Email == User.FindFirstValue(ClaimTypes.Email)); 
-            return CreateUser(user);
+                .FirstOrDefaultAsync(x => x.Email == User.FindFirstValue(ClaimTypes.Email));
+
+            await SetRefreshToken(user);
+            return CreateAppUser(user);
         }
 
         [AllowAnonymous]
@@ -108,7 +111,7 @@ namespace API.Controllers
             var user = await _userManager.Users.Include(p => p.Photos)
                 .FirstOrDefaultAsync(x => x.Email == fbInf.Email);
 
-            if (user != null) return CreateUser(user);
+            if (user != null) return CreateAppUser(user);
 
             user = new AppUser
             {
@@ -130,10 +133,45 @@ namespace API.Controllers
 
             if (!result.Succeeded) return BadRequest("Problem create user");
 
-            return CreateUser(user);
+            return CreateAppUser(user);
         }
 
-        private UserDto CreateUser(AppUser user)
+        [Authorize]
+        [HttpPost("refreshToken")]
+        public async Task<ActionResult<UserDto>> RefreshToken()
+        {
+            var refreshToken = Request.Cookies["refreshToken"];
+            var user = await _userManager.Users.Include(r => r.RefreshTokens)
+                .Include(x => x.Photos)
+                .FirstOrDefaultAsync(x => x.UserName == User.FindFirstValue(ClaimTypes.Name));
+
+            if (user == null) return Unauthorized();
+
+            var oldToken = user.RefreshTokens.SingleOrDefault(x => x.Token == refreshToken);
+
+            if (oldToken != null && !oldToken.IsActive)
+                return Unauthorized();
+
+            return CreateAppUser(user);
+        }
+
+        private async Task SetRefreshToken(AppUser user)
+        {
+            var refreshToken = _tokenService.GetRefreshToken();
+
+            user.RefreshTokens.Add(refreshToken);
+            await _userManager.UpdateAsync(user);
+
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = DateTime.UtcNow.AddDays(7)
+            };
+
+            Response.Cookies.Append("refreshToken", refreshToken.Token, cookieOptions);
+        }
+
+        private UserDto CreateAppUser(AppUser user)
         {
             return new UserDto
             {
