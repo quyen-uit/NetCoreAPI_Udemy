@@ -59,13 +59,23 @@ namespace API
         {
             app.UseMiddleware<ExceptionMiddleware>();
 
-              
-                //app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPIv5 v1"));
-             
 
-            app.UseHttpsRedirection();
+            if (env.IsDevelopment())
+            {
+                app.Use(async (context, next) =>
+                {
+                    context.Response.Headers.Add("Strict-Transport-Security", "max-age=31536000");
+                    await next.Invoke();
+                });
+            }
+            else
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
+
+
+            // app.UseHttpsRedirection();
 
             app.UseRouting();
 

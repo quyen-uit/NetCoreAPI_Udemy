@@ -1,6 +1,10 @@
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
 WORKDIR /app
 EXPOSE 80
+EXPOSE 443
+# Ensure we listen on any IP Address 
+ENV ASPNETCORE_URLS=http://*:80
+
 #copy .csproj and restore as distinct layers
 
 COPY "Demo.sln" "Demo.sln"
