@@ -1,8 +1,9 @@
-﻿using Application.Core;
+﻿using API.Extensions;
+using Application.Core;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
-namespace Demo.Controllers
+namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -19,9 +20,26 @@ namespace Demo.Controllers
                 return Ok(result.Value);
 
             if (result.IsSuccess && result.Value == null)
-                return NotFound();
+                return NotFound(result.Value);
 
-            return BadRequest();
+            return BadRequest(result.Error);
+        }
+
+        protected ActionResult HandlePageResult<T>(Result<PagedList<T>> result)
+        {
+            if (result == null) return NotFound();
+
+            if (result.IsSuccess && result.Value != null)
+            {
+                Response.AddPaginationHeader(result.Value.CurrentPage,
+                    result.Value.PageSize, result.Value.TotalCount, result.Value.TotalPages);
+                return Ok(result.Value);
+            }
+
+            if (result.IsSuccess && result.Value == null)
+                return NotFound(result.Value);
+
+            return BadRequest(result.Error);
         }
     }
 }

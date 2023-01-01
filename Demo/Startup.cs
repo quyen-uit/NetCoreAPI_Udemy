@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.Extensions;
 using API.Middleware;
+using API.SignalR;
 using Application.Activities;
 using Application.Core;
 using Application.Interfaces;
@@ -51,7 +52,6 @@ namespace API
             });
             services.AddApplicationServices(_config);
             services.AddIdentityServices(_config);
-            services.AddScoped<IUserAccessor, UserAccessor>(); 
          }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -59,14 +59,36 @@ namespace API
         {
             app.UseMiddleware<ExceptionMiddleware>();
 
+            app.UseXContentTypeOptions();
+            app.UseReferrerPolicy(opt => opt.NoReferrer());
+            app.UseXXssProtection(opt => opt.EnabledWithBlockMode());
+            app.UseXfo(opt => opt.Deny());
+            app.UseCsp(opt => opt
+                .BlockAllMixedContent()
+                .StyleSources(s => s.Self().CustomSources("https://fonts.googleapis.com"))
+                .FontSources(s => s.Self().CustomSources("https://fonts.gstatic.com", "data:"))
+                .FormActions(s => s.Self())
+                .FrameAncestors(s => s.Self())
+                .ImageSources(s => s.Self().CustomSources("blob:", "https://res.cloudinary.com", "https://platform-lookaside.fbsbx.com"))
+                .ScriptSources(s => s.Self())
+            );
             if (env.IsDevelopment())
             {
-                //app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPIv5 v1"));
+                app.UseSwaggerUI();
+                
+            }
+            else
+            {
+                app.Use(async (context, next) =>
+                {
+                    context.Response.Headers.Add("Strict-Transport-Security", "max-age=31536000");
+                    await next.Invoke();
+                });
             }
 
-            app.UseHttpsRedirection();
+
+            // app.UseHttpsRedirection();
 
             app.UseRouting();
 
@@ -75,9 +97,14 @@ namespace API
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<ChatHub>("/chat");
+                endpoints.MapFallbackToController("Index", "Fallback");
             });
         }
     }

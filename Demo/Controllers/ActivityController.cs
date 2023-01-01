@@ -1,20 +1,21 @@
 ﻿using Application.Activities;
+using Application.Core;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Demo.Controllers
+namespace API.Controllers
 {
     public class ActivityController : BaseAPIController
     {
 
         [HttpGet]
-        public async Task<ActionResult<List<Activity>>> GetActivities()
+        public async Task<ActionResult<List<Activity>>> GetActivities([FromQuery]ActivityParams param)
         {
-            var result = await Mediator.Send(new List.Query());
-            return HandleResult(result);
+            var result = await Mediator.Send(new List.Query() { Params = param});
+            return HandlePageResult(result);
         }
-        [Authorize(Policy = "IsActivityHost")]
+ 
         [HttpGet("{id}")]
         public async Task<ActionResult<Activity>> GetActivity(Guid id)
         {
@@ -27,6 +28,8 @@ namespace Demo.Controllers
         {
             return HandleResult(await Mediator.Send(new Create.Command() { Activity = activity }));
         }
+
+        [Authorize(Policy = "IsActivityHost")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateActivity(Guid id, Activity activity)
         {
@@ -39,7 +42,7 @@ namespace Demo.Controllers
         {
             return HandleResult(await Mediator.Send(new Delete.Command() { Id = id }));
         }
-        [Authorize(Policy = "IsActivityHost")]
+
         [HttpPost("{id}/attend")]
         public async Task<IActionResult> AttendActivity(Guid id)
         {
