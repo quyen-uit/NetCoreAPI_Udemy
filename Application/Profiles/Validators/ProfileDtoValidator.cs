@@ -1,17 +1,18 @@
-﻿using FluentValidation;
+﻿using Application.Profiles.Dtos;
+using FluentValidation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Profiles
+namespace Application.Profiles.Validators
 {
     public class ProfileDtoValidator : AbstractValidator<ProfileDto>
     {
         public ProfileDtoValidator()
         {
-            RuleFor(x=> x.DisplayName).NotEmpty();
+            RuleFor(x => x.DisplayName).NotEmpty();
         }
     }
 }

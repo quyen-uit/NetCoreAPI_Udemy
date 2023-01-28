@@ -1,12 +1,13 @@
-﻿using System;
+﻿using Domain;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Activities
+namespace Application.Profiles.Dtos
 {
-    public class AttendeeDto
+    public class Profile
     {
         public string UserName { get; set; }
         public string DisplayName { get; set; }
@@ -15,5 +16,6 @@ namespace Application.Activities
         public bool Following { get; set; }
         public int FollowersCount { get; set; }
         public int FollowingsCount { get; set; }
+        public ICollection<Photo> Photos { get; set; }
     }
 }

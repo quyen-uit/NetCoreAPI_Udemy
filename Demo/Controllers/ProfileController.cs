@@ -1,7 +1,11 @@
-﻿using Application.Profiles;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using API.DTOs;
+using Application.Profiles.Dtos;
+using Application.Profiles.Queries;
+using Application.Profiles.Commands;
+using Application.Enums;
+
 namespace API.Controllers
 {
     [Authorize]

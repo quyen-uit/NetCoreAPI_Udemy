@@ -1,5 +1,5 @@
 ﻿using Application.Followers;
-using Application.Profiles;
+using Application.Profiles.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

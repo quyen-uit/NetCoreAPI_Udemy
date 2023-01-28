@@ -1,4 +1,4 @@
-﻿namespace Application.Profiles
+﻿namespace Application.Profiles.Dtos
 {
     public class ProfileDto
     {

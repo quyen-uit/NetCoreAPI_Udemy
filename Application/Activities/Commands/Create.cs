@@ -1,4 +1,5 @@
-﻿using Application.Core;
+﻿using Application.Activities.Validators;
+using Application.Core;
 using Application.Interfaces;
 using Domain;
 using FluentValidation;
@@ -6,7 +7,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
-namespace Application.Activities
+namespace Application.Activities.Commands
 {
     public class Create
     {

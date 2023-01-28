@@ -1,4 +1,5 @@
 ﻿using Application.Activities;
+using Application.Activities.Dtos;
 using Application.Comments;
 using AutoMapper;
 using Domain;
@@ -31,7 +32,7 @@ namespace Application.Core
                     .ForMember(des => des.FollowingsCount, act => act.MapFrom(src => src.AppUser.Followings.Count))
                     .ForMember(des => des.Following, act => act.MapFrom(src => src.AppUser.Followers.Any(x => x.Observer.UserName == currentUserName)));
 
-            CreateMap<AppUser, Profiles.Profile>()
+            CreateMap<AppUser, Profiles.Dtos.Profile>()
                 .ForMember(des => des.Image, act => act.MapFrom(src => src.Photos.FirstOrDefault(x => x.IsMain).Url))
                 .ForMember(des => des.FollowersCount, act => act.MapFrom(src => src.Followers.Count))
                 .ForMember(des => des.FollowingsCount, act => act.MapFrom(src => src.Followings.Count))
@@ -42,7 +43,7 @@ namespace Application.Core
                 .ForMember(des => des.UserName, act => act.MapFrom(src => src.Author.UserName))
                 .ForMember(des => des.Image, act => act.MapFrom(src => src.Author.Photos.FirstOrDefault(x => x.IsMain).Url));
 
-            CreateMap<ActivityAttendee, Profiles.UserActivityDto>()
+            CreateMap<ActivityAttendee, Profiles.Dtos.UserActivityDto>()
              .ForMember(des => des.Id, act => act.MapFrom(src => src.ActivityId))
              .ForMember(des => des.Title, act => act.MapFrom(src => src.Activity.Title))
              .ForMember(des => des.Category, act => act.MapFrom(src => src.Activity.Category))

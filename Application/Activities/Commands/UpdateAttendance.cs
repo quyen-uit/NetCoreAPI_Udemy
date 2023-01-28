@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Activities
+namespace Application.Activities.Commands
 {
     public class UpdateAttendance
     {
@@ -32,7 +32,7 @@ namespace Application.Activities
                 var activity = await _context.Activities
                     .Include(x => x.ActivityAttendees)
                     .ThenInclude(x => x.AppUser)
-                    .SingleOrDefaultAsync(x=> x.Id == request.Id);
+                    .SingleOrDefaultAsync(x => x.Id == request.Id);
 
                 if (activity == null) return null;
 
@@ -55,13 +55,13 @@ namespace Application.Activities
 
                 if (attendance == null)
                 {
-                      _context.ActivityAttendees
-                        .Add(new Domain.ActivityAttendee
-                        {
-                            AppUser = user,
-                            Activity = activity,
-                            IsHost = true
-                        });
+                    _context.ActivityAttendees
+                      .Add(new Domain.ActivityAttendee
+                      {
+                          AppUser = user,
+                          Activity = activity,
+                          IsHost = true
+                      });
                 }
                 var result = await _context.SaveChangesAsync();
                 return result > 0 ? Result<Unit>.Success(Unit.Value) : Result<Unit>.Failure("update attendance fail");

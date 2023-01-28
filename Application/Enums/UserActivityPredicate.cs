@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Profiles
+namespace Application.Enums
 {
     public enum UserActivityPredicates
     {

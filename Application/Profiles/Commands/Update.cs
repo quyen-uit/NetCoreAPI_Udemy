@@ -1,17 +1,19 @@
 ﻿using Application.Core;
 using Application.Interfaces;
+using Application.Profiles.Dtos;
+using Application.Profiles.Validators;
 using Domain;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
-namespace Application.Profiles
+namespace Application.Profiles.Commands
 {
     public class Update
     {
-        public class Command: IRequest<Result<Unit>>
+        public class Command : IRequest<Result<Unit>>
         {
-             public ProfileDto Profile { get; set; }
+            public ProfileDto Profile { get; set; }
         }
 
         public class CommandValidator : AbstractValidator<Command>
@@ -42,7 +44,7 @@ namespace Application.Profiles
                 user.Bio = request.Profile.Bio;
                 user.DisplayName = request.Profile.DisplayName;
 
-                _context.Attach<AppUser>(user).State = EntityState.Modified; 
+                _context.Attach(user).State = EntityState.Modified;
                 var result = await _context.SaveChangesAsync() > 0;
 
                 if (result)

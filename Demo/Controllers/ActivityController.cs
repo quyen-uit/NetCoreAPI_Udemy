@@ -1,4 +1,6 @@
-﻿using Application.Activities;
+﻿using Application.Activities.Commands;
+using Application.Activities.Dtos;
+using Application.Activities.Queries;
 using Application.Core;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
@@ -23,6 +25,7 @@ namespace API.Controllers
             return HandleResult(result);
 
         }
+
         [HttpPost]
         public async Task<IActionResult> AddActivity(Activity activity)
         {

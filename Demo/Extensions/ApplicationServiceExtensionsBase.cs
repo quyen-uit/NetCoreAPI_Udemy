@@ -1,12 +1,15 @@
-﻿using Application.Activities;
+﻿using Application.Activities.Commands;
+using Application.Activities.Queries;
 using Application.Core;
 using Application.Interfaces;
+using Application.Settings;
 using Infrastructure.Photos;
 using Infrastructure.Security;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Persistence;
+using System.Reflection;
 
 namespace API.Extensions
 {
@@ -49,7 +52,8 @@ namespace API.Extensions
             services.AddDbContext<DataContext>(opt =>
 
             {
-                opt.UseNpgsql(config.GetConnectionString("DefaultConnection"));
+                //opt.UseNpgsql(config.GetConnectionString("DefaultConnection"));
+                opt.UseSqlite(config.GetConnectionString("DefaultConnection"));
             });
 
             services.AddCors(opt =>
@@ -67,6 +71,7 @@ namespace API.Extensions
             services.AddMediatR(typeof(Detail.Handler).Assembly);
             services.AddMediatR(typeof(Create.Command).Assembly);
             services.AddMediatR(typeof(Edit.Command).Assembly);
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CachingBehavior<,>));
 
             services.AddAutoMapper(typeof(MappingProfiles).Assembly);
 
@@ -76,6 +81,10 @@ namespace API.Extensions
             services.AddScoped<IUserAccessor, UserAccessor>();
 
             services.AddSignalR();
+
+            services.AddDistributedMemoryCache();
+            services.Configure<CacheSettings>(config.GetSection("CacheSettings"));
+
 
             return services;
         }

@@ -1,5 +1,7 @@
 ﻿using Application.Core;
+using Application.Enums;
 using Application.Interfaces;
+using Application.Profiles.Dtos;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain;
@@ -12,7 +14,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Profiles
+namespace Application.Profiles.Queries
 {
     public class ListActivities
     {

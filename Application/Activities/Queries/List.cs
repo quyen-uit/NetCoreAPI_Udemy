@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Application.Activities.Dtos;
 using Application.Core;
 using Application.Interfaces;
 using AutoMapper;
@@ -12,13 +13,16 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
-namespace Application.Activities
+namespace Application.Activities.Queries
 {
     public class List
     {
-        public class Query : IRequest<Result<PagedList<ActivityDto>>> 
+        public class Query : IRequest<Result<PagedList<ActivityDto>>>, ICacheableMediatrQuery
         {
             public ActivityParams Params { get; set; }
+            public bool BypassCache { get; set; }
+            public string CacheKey => $"ActivityList";
+            public TimeSpan? SlidingExpiration { get; set; }
         }
         public class Handler : IRequestHandler<Query, Result<PagedList<ActivityDto>>>
         {
@@ -35,8 +39,8 @@ namespace Application.Activities
             {
                 //var activities = await _dataContext.Activities.ProjectTo<ActivityDto>(_mapper.ConfigurationProvider, new {currentUserName = _userAccessor.GetUserName()}).ToListAsync(cancellationToken);
                 var query = _dataContext.Activities
-                    .Where(x=>x.Date >= request.Params.StartDate)
-                    .OrderBy(x=> x.Date)
+                    .Where(x => x.Date >= request.Params.StartDate)
+                    .OrderBy(x => x.Date)
                     .ProjectTo<ActivityDto>(_mapper.ConfigurationProvider, new { currentUserName = _userAccessor.GetUserName() })
                     .AsQueryable();
 
@@ -50,8 +54,8 @@ namespace Application.Activities
                     query = query.Where(x => x.HostUserName == _userAccessor.GetUserName());
                 }
 
-                    return Result<PagedList<ActivityDto>>.Success(await PagedList<ActivityDto>
-                    .CreateAsync(query,request.Params.PageNumber,request.Params.PageSize));
+                return Result<PagedList<ActivityDto>>.Success(await PagedList<ActivityDto>
+                .CreateAsync(query, request.Params.PageNumber, request.Params.PageSize));
             }
         }
     }
