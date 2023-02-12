@@ -83,7 +83,7 @@ namespace API.Extensions
         private static string GetPGSQLConnectionString()
         {
             var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
-            var databaseUri = new Uri(databaseUrl);
+            var databaseUri = new Uri("postgresql://postgres:u95AxDmFJTVV8GKcopEb@containers-us-west-180.railway.app:7968/railway");
             var userInfo = databaseUri.UserInfo.Split(':');
 
             var builder = new NpgsqlConnectionStringBuilder
