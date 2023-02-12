@@ -6,6 +6,7 @@ using Infrastructure.Security;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using Npgsql;
 using Persistence;
 
 namespace API.Extensions
@@ -47,9 +48,8 @@ namespace API.Extensions
             });
 
             services.AddDbContext<DataContext>(opt =>
-
             {
-                opt.UseNpgsql(config.GetConnectionString("DefaultConnection"));
+                opt.UseNpgsql(GetPGSQLConnectionString());
             });
 
             services.AddCors(opt =>
@@ -79,5 +79,24 @@ namespace API.Extensions
 
             return services;
         }
+
+        private static string GetPGSQLConnectionString()
+        {
+            var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+            var databaseUri = new Uri(databaseUrl);
+            var userInfo = databaseUri.UserInfo.Split(':');
+
+            var builder = new NpgsqlConnectionStringBuilder
+            {
+                Host = databaseUri.Host,
+                Port = databaseUri.Port,
+                Username = userInfo[0],
+                Password = userInfo[1],
+                Database = databaseUri.LocalPath.TrimStart('/')
+            };
+
+            return builder.ToString();
+        }
+
     }
 }
