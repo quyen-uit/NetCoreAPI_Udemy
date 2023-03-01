@@ -76,7 +76,7 @@ namespace API.Controllers
                     {
                         IsMain = true,
                         Url = "https://res.cloudinary.com/dvprgsqcs/image/upload/v1676208410/h6rjkidqwa8xi09appso.jpg",
-                        Id = "h6rjkidqwa8xi09appso"
+                        Id = registerDto.Email + "h6rjkidqwa8xi09appso"
                     }
                 }
             };
