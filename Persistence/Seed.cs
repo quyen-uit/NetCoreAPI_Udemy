@@ -20,19 +20,47 @@ namespace Persistence
                     {
                         DisplayName = "Bob",
                         UserName = "bob",
-                        Email = "bob@test.com"
+                        Email = "bob@test.com",
+                        Photos = new List<Photo>
+                        {
+                            new Photo
+                            {
+                                IsMain = true,
+                                Url = "https://res.cloudinary.com/dvprgsqcs/image/upload/v1676208410/h6rjkidqwa8xi09appso.jpg",
+                                Id = "evyg4trhdeqpuae5u8qe"
+                            }
+                        }
+                                          
                     },
                     new AppUser
                     {
                         DisplayName = "Jane",
                         UserName = "jane",
-                        Email = "jane@test.com"
+                        Email = "jane@test.com",
+                        Photos = new List<Photo>
+                        {
+                            new Photo
+                            {
+                                IsMain = true,
+                                Url = "https://res.cloudinary.com/dvprgsqcs/image/upload/v1676208410/h6rjkidqwa8xi09appso.jpg",
+                                Id = "h6rjkidqwa8xi09appso"
+                            }
+                        }
                     },
                     new AppUser
                     {
                         DisplayName = "Tom",
                         UserName = "tom",
-                        Email = "tom@test.com"
+                        Email = "tom@test.com",
+                        Photos = new List<Photo>
+                        {
+                            new Photo
+                            {
+                                IsMain = true,
+                                Url = "https://res.cloudinary.com/dvprgsqcs/image/upload/v1671469586/gsf9ebygyqwvdcedltxh.jpg",
+                                Id = "gsf9ebygyqwvdcedltxh"
+                            }
+                        }
                     },
                 };
 

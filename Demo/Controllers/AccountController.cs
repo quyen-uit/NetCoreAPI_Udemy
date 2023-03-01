@@ -69,7 +69,16 @@ namespace API.Controllers
             {
                 UserName = registerDto.UserName,
                 DisplayName = registerDto.DisplayName,
-                Email = registerDto.Email
+                Email = registerDto.Email,
+                Photos = new List<Photo>
+                {
+                    new Photo
+                    {
+                        IsMain = true,
+                        Url = "https://res.cloudinary.com/dvprgsqcs/image/upload/v1676208410/h6rjkidqwa8xi09appso.jpg",
+                        Id = "h6rjkidqwa8xi09appso"
+                    }
+                }
             };
 
             var result = await _userManager.CreateAsync(user, registerDto.Password);
