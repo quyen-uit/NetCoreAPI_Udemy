@@ -10,7 +10,7 @@ namespace Domain
     {
         public int Id { get; set; }
         public string Body { get; set; }
-        public DateTime CreateAt { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public AppUser Author { get; set; }
 
         public Guid ActivityId { get; set; }

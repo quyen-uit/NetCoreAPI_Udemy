@@ -49,8 +49,8 @@ namespace API.Extensions
 
             services.AddDbContext<DataContext>(opt =>
             {
-                opt.UseNpgsql(GetPGSQLConnectionString());
-                //opt.UseNpgsql(config.GetConnectionString("DefaultConnection"));
+                //opt.UseNpgsql(GetPGSQLConnectionString());
+    opt.UseNpgsql(config.GetConnectionString("DefaultConnection"));
 
             });
 

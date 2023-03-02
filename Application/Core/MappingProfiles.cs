@@ -37,7 +37,7 @@ namespace Application.Core
                 .ForMember(des => des.FollowingsCount, act => act.MapFrom(src => src.Followings.Count))
                 .ForMember(des => des.Following, act => act.MapFrom(src => src.Followers.Any(x => x.Observer.UserName == currentUserName)));
 
-            CreateMap<Comment,CommentDto>()
+            CreateMap<Comment, CommentDto>()
                 .ForMember(des => des.DisplayName, act => act.MapFrom(src => src.Author.DisplayName))
                 .ForMember(des => des.UserName, act => act.MapFrom(src => src.Author.UserName))
                 .ForMember(des => des.Image, act => act.MapFrom(src => src.Author.Photos.FirstOrDefault(x => x.IsMain).Url));

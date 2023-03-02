@@ -35,7 +35,7 @@ namespace Application.Comments
             {
                 var commentDtos = await _context.Comments
                     .Where(c=>c.ActivityId == request.ActivityId)
-                    .OrderBy(x => x.CreateAt)
+                    .OrderBy(x => x.CreatedAt)
                     .ProjectTo<CommentDto>(_mapper.ConfigurationProvider)
                     .ToListAsync();
 
